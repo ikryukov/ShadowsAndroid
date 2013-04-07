@@ -289,6 +289,7 @@ void RenderingEngine2::Initialize(int width, int height) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	// create frame buffer object for shadow pass
 	glGenFramebuffers(1, &m_fboShadow);
 	glBindFramebuffer(GL_FRAMEBUFFER, m_fboShadow);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_textureShadow, 0);

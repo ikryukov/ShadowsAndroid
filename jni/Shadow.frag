@@ -12,8 +12,8 @@ void main(void)
 {
 	const lowp float fAmbient = 0.4;
 	Light = normalize(Light);
-	highp float comp = (fShadowMapCoord.z / fShadowMapCoord.w);
-	highp float depth = texture2DProj(shadowMapTex, fShadowMapCoord).r;
-	highp float visibility = comp <= depth ? 1.0 : 0.2;
+	highp float depth = (fShadowMapCoord.z / fShadowMapCoord.w);
+	highp float depth_light = texture2DProj(shadowMapTex, fShadowMapCoord).r;
+	highp float visibility = depth <= depth_light ? 1.0 : 0.2;
 	gl_FragColor = fColor * max(0.0, dot(fNormal, Light)) * visibility;
 }
