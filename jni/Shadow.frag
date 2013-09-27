@@ -1,7 +1,7 @@
 uniform highp sampler2D shadowMapTex;
 
-varying highp vec4 fColor;
-varying highp vec3 fNormal;
+varying lowp vec4 fColor;
+varying lowp vec3 fNormal;
 varying highp vec2 fTexCoord;
 varying highp vec4 fShadowMapCoord;
 
@@ -14,6 +14,7 @@ void main(void)
 	Light = normalize(Light);
 	highp float depth = (fShadowMapCoord.z / fShadowMapCoord.w);
 	highp float depth_light = texture2DProj(shadowMapTex, fShadowMapCoord).r;
-	highp float visibility = depth <= depth_light ? 1.0 : 0.2;
+	//highp float visibility = depth <= depth_light ? 1.0 : 0.2;
+	highp float visibility = clamp(step(depth, depth_light) + 0.2, 0.0, 1.0);
 	gl_FragColor = fColor * max(0.0, dot(fNormal, Light)) * visibility;
 }

@@ -218,8 +218,8 @@ void RenderingEngine2::Initialize(int width, int height) {
 	screen.x = width;
 	screen.y = height;
 
-	shadowmapSize.x = 512 * 2;
-	shadowmapSize.y = 512 * 2;
+	shadowmapSize.x = 512 * 2 + 2;
+	shadowmapSize.y = 512 * 2 + 2;
 
 	string shaderPath = resourcePath + string("/Simple.vert");
 	string vertexShaderSource = loadShaderFromFile(shaderPath);
@@ -287,8 +287,8 @@ void RenderingEngine2::Initialize(int width, int height) {
 	// Set the textures parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	// create frame buffer object for shadow pass
 	glGenFramebuffers(1, &m_fboShadow);
 	glBindFramebuffer(GL_FRAMEBUFFER, m_fboShadow);
@@ -341,7 +341,8 @@ void RenderingEngine2::shadowPass() {
 		LOGE("Shadow pass: ");
 		LOGE("failed to make complete framebuffer object %x\n", status);
 	}
-	glClear(GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClear(GL_DEPTH_BUFFER_BIT);
 	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 
 	lightProjectionMatrix = VerticalFieldOfView(90.0,
@@ -353,7 +354,7 @@ void RenderingEngine2::shadowPass() {
 			lightProjectionMatrix.Pointer());
 	glUniformMatrix4fv(uniformModelviewMain, 1, 0,
 			lightModelviewMatrix.Pointer());
-	glViewport(0, 0, shadowmapSize.x - 2, shadowmapSize.y - 2);
+	glViewport(0, 0, shadowmapSize.x - 0, shadowmapSize.y - 0);
 
 	GLsizei stride = sizeof(Vertex);
 	const vector<ObjModel>& objects = m_Scene.getModels();
